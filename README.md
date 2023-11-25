@@ -1,1 +1,11 @@
-# Arizona
+PERMISOS PARA FUNCIONES BASADAS EN CLASES
+@method_decorator(has_permission(['Reportes']), name='dispatch')
+PERMISOS PARA FUNCIONES @has_permission(['Reportes'])
+
+#\Proyecto_Titulo\templates 
+TEMPLATES - GENERALES DEL SISTEMA,
+MSG - MENSAES GENERALES UTILIZADOS,
+PAGES - HOME GLOBAL,
+PARTIALS - SE ENCUENTRA EL NAV Y EL FOOTER ( NOTAR QUE EN EL LAYAOUT ESTAN FIJADOS CON INCLUDE ESTOS), LAYAOUT ES LA PLANTILLA BASE PARA TODO.
+
+usuario/pass admin: alonso , alonso.

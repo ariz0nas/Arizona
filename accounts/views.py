@@ -38,7 +38,7 @@ class UserDeleteView(DeleteView):
     success_url = reverse_lazy('account:user_list')
     context_object_name = 'user'
 
-@method_decorator(has_permission(['crear user']), name='dispatch')
+
 class RegisterView(CreateView):
     model = User
     form_class = UserAdminCreationForm

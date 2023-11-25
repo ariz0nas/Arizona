@@ -27,6 +27,9 @@ from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
+BASE_URL = f'{settings.URL_BASE}/'
+
+
 
 
 class LoginView(FormView):
@@ -43,7 +46,7 @@ class LoginView(FormView):
     def form_valid(self, form):
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
-        response = requests.post(f'{settings.URL_BASE}/api/log/', json={'username': username, 'password': password})
+        response = requests.post(f'{BASE_URL}api/log/', json={'username': username, 'password': password})
         if response.status_code == 200:
             try:
                 u = response.json()
@@ -108,8 +111,9 @@ class LogoutView(View):
             messages.error(request, 'Se ha cerrado sesión')
             return response
 
+        
         headers = {'Authorization': f'Token {token}'}
-        response = requests.get(f'{settings.URL_BASE}/api/out/', headers=headers)
+        response = requests.get(f'{BASE_URL}api/out/', headers=headers)
         if response.status_code == 200:
             logout(request)
             response = redirect('home')

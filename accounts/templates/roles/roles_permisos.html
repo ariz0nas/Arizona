@@ -85,7 +85,7 @@ Roles & Permisos | {{ block.super }}
     </div>
     </div>
   {% else %}
-    <h1 class="mb-4">Lista de Roles</h1>
+    <h1 class="mb-3">Lista de Roles</h1>
     <ul class="list-group">
       {% for rol in roles %}
         <li class="list-group-item"><a href="{% url 'account:rol-det' pk=rol.pk %}" class="text-decoration-none">{{ rol.nombre }}</a></li>

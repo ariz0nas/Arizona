@@ -4,6 +4,8 @@ import socket
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+URL_BASE = 'http://127.0.0.1:8000'
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-v2_d#nv6ls^j+a0z457$xr##kt1s)40u__pew2jkh%d*01)+s='
@@ -72,7 +74,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-URL_BASE = 'http://127.0.0.1:8000'
 
 
 

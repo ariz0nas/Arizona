@@ -19,7 +19,7 @@ import uuid
 
 # ESTE ES UNA RCHIVO APARTE QUE TIENE FUNCIONES DE VIEW LAS CUALES CONSUMEN LA API DE TRANSBANK 
 def crear_transaccion(request, agenda, amount):
-    BASE_URL = 'http://127.0.0.1:8000/'
+    BASE_URL = f'{settings.URL_BASE}/'
     return_url = f"{BASE_URL}cliente/confirm-transaction/"
 
     url = 'https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions'

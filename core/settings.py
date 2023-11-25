@@ -72,6 +72,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+URL_BASE = 'http://127.0.0.1:8000'
+
+
 
 # En el archivo CORS_ORIGIN_WHITELIST, también asegúrate de permitir ambas versiones de localhost
 CORS_ORIGIN_WHITELIST = [
@@ -163,10 +166,9 @@ EMAIL_HOST_PASSWORD = 'vtjpbhmyixxcakdr'
 
 
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_ROOT =  os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static',]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'

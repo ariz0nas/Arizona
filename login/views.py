@@ -23,6 +23,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from .forms import AdminLoginForm 
 from accounts.models import User 
+from django.conf import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +43,7 @@ class LoginView(FormView):
     def form_valid(self, form):
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
-        response = requests.post('http://127.0.0.1:8000/api/log/', json={'username': username, 'password': password})
+        response = requests.post(f'{settings.URL_BASE}/api/log/', json={'username': username, 'password': password})
         if response.status_code == 200:
             try:
                 u = response.json()
@@ -107,7 +109,7 @@ class LogoutView(View):
             return response
 
         headers = {'Authorization': f'Token {token}'}
-        response = requests.get('http://127.0.0.1:8000/api/out/', headers=headers)
+        response = requests.get(f'{settings.URL_BASE}/api/out/', headers=headers)
         if response.status_code == 200:
             logout(request)
             response = redirect('home')

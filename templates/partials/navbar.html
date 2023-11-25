@@ -12,6 +12,17 @@
                 </li>
                 
                 {% if user.is_authenticated %}
+                    {% if user.roles.nombre == 'admin' %}
+                    <!-- Opciones que verá un usuario con rol "admin"" -->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'account:rol-list' %}">Roles/Permisos</a>
+                    </li>
+                    {% endif %}
+                    {% if user.roles.nombre == 'trabajador' %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'servicio:agenda-reserva' %}">Reserva</a>
+                    </li>
+                    {% endif %}
                     {% if user.roles.nombre == 'admin' or user.roles.nombre == 'trabajador' %}
                         <!-- Opciones que verá un usuario con rol "admin", "trabajador" o "nuevo_rol" -->
                         <li class="nav-item">
@@ -26,7 +37,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'cliente:cliente_list' %}">Clientes</a>
                         </li>
-                    {% elif user.roles.nombre == 'cliente' %}
+                    {% elif user.roles.nombre == 'cliente'%}
                         <!-- Opciones que verá un usuario con rol "cliente" -->
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'servicio:agenda-reserva' %}">Reserva</a>

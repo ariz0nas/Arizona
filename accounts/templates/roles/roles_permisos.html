@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-
 {% load static %}
 {% load humanize %}
 
@@ -7,37 +6,93 @@
 Roles & Permisos | {{ block.super }}
 {% endblock %}
 
-
 {% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+
+  .permisos-container {
+    margin-top: 20px;
+  }
+
+  .permisos-actuales,
+  .selecciona-permisos {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .accordion-button {
+    cursor: pointer;
+  }
+</style>
 {% endblock %}
 
 {% block container %}
-<div class="container">
-  <br>
-  <hr>
-  <div class="card">
-    <div class="card-header">
-      <h1 class="card-title">Roles & Permisos</h1>
-        {% for roles in rol %}
-        {{ roles.nombre }}
-        {% empty %}
-          <tr>
-            <td colspan="6">No hay Roles disponibles.</td>
-          </tr>
-        {% endfor %}
-        <hr>
-        {% for permisos in permiso %}
-        {{ permisos.nombre }}
-        {% empty %}
-          <tr>
-            <td colspan="6">No hay Roles disponibles.</td>
-          </tr>
-        {% endfor %}
+<div class="container mt-5">
+  {% if rol %}
+        <div class="row">
+          <div class="col-md-6">
+              <div class="card permisos-actuales">
+                  <h2 class="card-title">Permisos Actuales:</h2>
+                  <div class="row">
+                      {% for permiso in rol.permisos.all %}
+                          <div class="col-6 mb-3">
+                              <div class="card">
+                                  <div class="card-body">
+                                      <p class="card-text">{{ permiso.nombre }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      </div>
 
+
+      <div class="col-md-6">
+        <div class="card selecciona-permisos">
+            <h2 class="card-title mb-3">Selecciona Permisos:</h2>
+            <form method="post" action="{% url 'account:rol-det' pk=rol.pk %}">
+                {% csrf_token %}
+                <div class="accordion" id="permisosAccordion">
+                    {% regroup permisos by clase as permisos_by_clase %}
+                    {% for clase in permisos_by_clase %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                    {{ clase.grouper }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#permisosAccordion">
+                                <div class="accordion-body">
+                                    <div class="form-check">
+                                        {% for permiso in clase.list %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="permisos" value="{{ permiso.pk }}"
+                                                    {% if permiso in rol.permisos.all %}checked{% endif %}>
+                                                <label class="form-check-label">{{ permiso.nombre }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-    <div class="card-body">
-      
     </div>
-  </div>
+  {% else %}
+    <h1 class="mb-4">Lista de Roles</h1>
+    <ul class="list-group">
+      {% for rol in roles %}
+        <li class="list-group-item"><a href="{% url 'account:rol-det' pk=rol.pk %}" class="text-decoration-none">{{ rol.nombre }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </div>
 {% endblock %}
+
+<script src="{% static 'path/to/bootstrap.bundle.min.js' %}"></script>

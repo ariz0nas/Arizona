@@ -11,6 +11,11 @@ from django.utils import timezone
 
 from django.db.models import Q
 from django.views.generic import ListView
+from accounts.decorators import has_permission
+from django.utils.decorators import method_decorator
+
+
+from django.contrib.auth.decorators import login_required
 
 
 class CanchaListView(ListView):

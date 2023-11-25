@@ -1,28 +1,12 @@
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, render, get_object_or_404
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (
-    CreateView,
-    UpdateView,
-    FormView,
-    DetailView,
-    ListView,
-    DeleteView,
-)
-from .models import User, Rol 
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, FormView, DeleteView
+from django.utils.decorators import method_decorator
+from .decorators import has_permission
+from .models import User, Rol
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserAdminCreationForm
 
-#decorador
-from .decorators import has_permission
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-
-#alonso ( al final se asignaran los prmisos para cada funcion)
-# @method_decorator(has_permission(['Listar_usuarios']), name='dispatch')
-
-# view Sub Index de administracion
 class IndexView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'accounts/index.html'
@@ -31,13 +15,13 @@ class IndexView(LoginRequiredMixin, DetailView):
     def get_object(self):
         return self.request.user
 
-# FUNCIONES DE USUARIO
 @method_decorator(has_permission(['leer user']), name='dispatch')
 class UserListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'accounts/user_list.html'
     context_object_name = 'users'
 
+@method_decorator(has_permission(['leer user']), name='dispatch')
 class UserAdminListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'admin/user_admin.html'
@@ -47,12 +31,14 @@ class UserAdminListView(LoginRequiredMixin, ListView):
         roles_to_filter = ['trabajador']
         return User.objects.filter(roles__nombre__in=roles_to_filter)
 
+@method_decorator(has_permission(['eliminar user']), name='dispatch')
 class UserDeleteView(DeleteView):
     model = User
     template_name = 'accounts/user_confirm_delete.html'
     success_url = reverse_lazy('account:user_list')
     context_object_name = 'user'
 
+@method_decorator(has_permission(['crear user']), name='dispatch')
 class RegisterView(CreateView):
     model = User
     form_class = UserAdminCreationForm
@@ -68,7 +54,6 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 class UpdateUserView(LoginRequiredMixin, UpdateView):
-
     model = User
     login_url = reverse_lazy('Login:login')
     template_name = 'accounts/update_user.html'
@@ -79,7 +64,6 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):
-
     template_name = 'accounts/update_password.html'
     login_url = reverse_lazy('Login:login')
     success_url = reverse_lazy('account:index')
@@ -100,8 +84,6 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         return context
 
 
-
-
 index = IndexView.as_view()
 register = RegisterView.as_view()
 update_user = UpdateUserView.as_view()
@@ -109,9 +91,3 @@ update_password = UpdatePasswordView.as_view()
 user_list = UserListView.as_view()
 user_admin_list = UserAdminListView.as_view()
 user_delete = UserDeleteView.as_view()
-
-
-
-
-
-

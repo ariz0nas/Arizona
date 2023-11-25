@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import roles_permisos
+from .roles_permisos import RolDetailView,RolListView
 
 
 app_name = 'account'
@@ -18,7 +19,8 @@ urlpatterns = [
     path('user-delete/<int:pk>/', views.user_delete, name='user_delete'),
     
     #ROLES Y PERMISOS
-    path('roles/', roles_permisos.roles_list, name='roles_list'),
-    path('permisos/', roles_permisos.permisos_list, name='permisos_list'),
+    path('roles/', RolListView.as_view(), name='rol-list'),
+    path('rol/<int:pk>/', RolDetailView.as_view(), name='rol-det'),
+
 
 ]

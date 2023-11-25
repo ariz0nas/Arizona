@@ -1,18 +1,32 @@
-from .models import User,Rol,Permiso
 from django.shortcuts import render
-#este archivo es como el view.py pero solo para roles y permisos, en urls ya esta importado.
-#MANTENEDORES DE ROLES Y PERMISOS
+from django.views import View
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+from .models import Rol, Permiso
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.shortcuts import redirect
 
+class RolListView(ListView):
+    model = Rol
+    template_name = 'roles/roles_permisos.html'
+    context_object_name = 'roles'
 
-def roles_list(request):
-    rol = Rol.objects.all()
-    permiso = Permiso.objects.all()
-    context = { 'rol': rol,
-                'permiso': permiso}
-    return render(request, 'roles/roles_permisos.html', context)
+class RolDetailView(DetailView):
+    model = Rol
+    template_name = 'roles/roles_permisos.html'
+    context_object_name = 'rol'
 
-def permisos_list(request):
-    permiso = Permiso.objects.all()
-    context = {'permiso': permiso}
-    return render(request, 'roles/roles_permisos.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['permisos'] = Permiso.objects.all()
+        return context
 
+    def post(self, request, *args, **kwargs):
+        rol = get_object_or_404(Rol, pk=self.kwargs['pk'])
+        permisos = request.POST.getlist('permisos')
+
+        # Actualizar permisos del rol
+        rol.permisos.set(permisos)
+
+        return redirect(reverse('account:rol-det', args=[rol.pk]))

@@ -14,6 +14,12 @@ import random
 import string
 from .transbank import crear_transaccion
 
+from accounts.decorators import has_permission
+from django.utils.decorators import method_decorator
+
+
+from django.contrib.auth.decorators import login_required
+
 #cliente
 def cliente_list(request):
     clientes = Cliente.objects.all()

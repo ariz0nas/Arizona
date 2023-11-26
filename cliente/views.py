@@ -21,10 +21,15 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 #cliente
+from accounts.models import Rol
+
 def cliente_list(request):
-    clientes = Cliente.objects.all()
+    # Filtrar clientes que tienen el rol de cliente
+    clientes = Cliente.objects.filter(user__roles__nombre='cliente')
+    
     context = {'clientes': clientes}
     return render(request, 'cliente/listar.html', context)
+
 
 #ESTA FUNCION ES PARA RECORDAR RELLENAR TODOS SUS DATOS
 def crear_cliente(request):

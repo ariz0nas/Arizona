@@ -29,7 +29,7 @@
             <td>
               <form method="post" action="{% url 'cliente:eliminar_reserva' reserva.id %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta reserva?')">Eliminar</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro que deseas cancelar esta reserva?')">Cancelar</button>
               </form>
             </td>
           </tr>

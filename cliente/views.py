@@ -112,9 +112,9 @@ def eliminar_reserva(request, reserva_id):
     # Verifica si el usuario tiene permisos para eliminar la reserva
     if request.user.cliente == reserva.cliente:
         reserva.delete()
-        messages.success(request, 'Reserva eliminada correctamente.')
+        messages.success(request, 'Reserva cancelada correctamente.')
     else:
-        messages.error(request, 'No tienes permisos para eliminar esta reserva.')
+        messages.error(request, 'No tienes permisos para cancelar esta reserva.')
 
     return redirect('cliente:listar_reservas_usuario')
 

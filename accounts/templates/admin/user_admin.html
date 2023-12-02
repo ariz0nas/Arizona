@@ -25,7 +25,6 @@ List | {{ block.super }}
             <th>Usuario</th>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -34,11 +33,6 @@ List | {{ block.super }}
             <td>{{ user.username }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
-            <td>
-              <!-- Agrega los enlaces para las acciones de edición y eliminación -->
-              <a href="#" class="btn btn-primary">Edit</a>
-              <a href="{% url 'account:user_delete' user.pk %}" class="btn btn-danger">Delete</a>
-            </td>
           </tr>
           {% endfor %}
         </tbody>

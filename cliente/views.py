@@ -16,17 +16,22 @@ from .transbank import crear_transaccion
 
 from accounts.decorators import has_permission
 from django.utils.decorators import method_decorator
-
-
 from django.contrib.auth.decorators import login_required
 
-#cliente
-from accounts.models import Rol
 
+#cliente
+from django.shortcuts import render
+from .models import Cliente
+from accounts.models import Rol
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def cliente_list(request):
-    # Filtrar clientes que tienen el rol de cliente
-    clientes = Cliente.objects.filter(user__roles__nombre='cliente')
-    
+    # Obtén el rol de "cliente"
+    cliente_role, created = Rol.objects.get_or_create(nombre='cliente')
+    # Filtra los usuarios que tienen el rol de "cliente"
+    clientes = Cliente.objects.filter(user__roles=cliente_role)
+
     context = {'clientes': clientes}
     return render(request, 'cliente/listar.html', context)
 
@@ -82,6 +87,11 @@ def reserva_list(request):
     today = timezone.now().date()
     return render(request, 'reserva/listar.html', {'reservas': reservas, 'today': today})
 
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.contrib import messages
+from .models import Reserva
+
 def listar_reservas_usuario(request):
     try:
         cliente = request.user.cliente
@@ -89,8 +99,25 @@ def listar_reservas_usuario(request):
         messages.warning(request, 'Necesitas crear un Cliente para acceder a esta página')
         return redirect(reverse('cliente:cliente_create'))
 
-    reservas = Reserva.objects.filter(cliente=cliente)
-    return render(request, 'reserva/reservas_usuario.html', {'reservas': reservas})
+    # Filtrar reservas por estado "pendiente" o "finalizada"
+    reservas_pendientes_finalizadas = Reserva.objects.filter(cliente=cliente, estado__in=['pendiente', 'finalizada'])
+
+    return render(request, 'reserva/reservas_usuario.html', {'reservas': reservas_pendientes_finalizadas})
+
+
+
+
+def eliminar_reserva(request, reserva_id):
+    reserva = get_object_or_404(Reserva, id=reserva_id)
+    # Verifica si el usuario tiene permisos para eliminar la reserva
+    if request.user.cliente == reserva.cliente:
+        reserva.delete()
+        messages.success(request, 'Reserva eliminada correctamente.')
+    else:
+        messages.error(request, 'No tienes permisos para eliminar esta reserva.')
+
+    return redirect('cliente:listar_reservas_usuario')
+
 
 
 def crear_reserva(request, agenda_id):
@@ -120,7 +147,7 @@ def crear_reserva(request, agenda_id):
                     print(f'reserva actual: {reserva_session}')
                     return render(request, 'reserva/crear.html', {'transaction_data': transaction_data})
                 else:
-                    return render(request, 'transbank/error.html')
+                    return render(request, 'pages/home.html')
 
     dias_reservados = Reserva.objects.filter(agenda__cancha=agenda.cancha, agenda__horario=agenda.horario).values_list('dia', flat=True)
     dias_reservados_str = ', '.join([dia.strftime('%d/%m/%Y') for dia in dias_reservados])

@@ -15,6 +15,53 @@ class IndexView(LoginRequiredMixin, DetailView):
     def get_object(self):
         return self.request.user
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import User
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib import messages
+
+# accounts/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import UserEditForm
+from .models import User
+
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario actualizado exitosamente.')
+            return redirect('account:user_list')  
+    else:
+        form = UserEditForm(instance=user)
+    return render(request, 'accounts/edit.html', {'form': form, 'user': user})
+
+
+
+from django.utils.decorators import method_decorator
+from django.views import View
+from .decorators import has_permission  
+
+@method_decorator(has_permission(['eliminar user']), name='dispatch')
+class EliminarUsuarioView(View):
+    def post(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        return redirect('account:user_list')
+    
+    def get(self, request, user_id):
+        return redirect('account:user_list')
+
+
+
 @method_decorator(has_permission(['leer user']), name='dispatch')
 class UserListView(LoginRequiredMixin, ListView):
     model = User

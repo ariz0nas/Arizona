@@ -6,15 +6,37 @@ Reserva | {{ block.super }}
 
 {% load static %}
 {% block head %}
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
 
+    #error-container {
+      text-align: center;
+      padding: 20px;
+      border: 2px solid red;
+      border-radius: 8px;
+      background-color: #ffeeee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
 {% endblock %}
 
 {% block container %}
+  <div id="error-container">
+    <h1 style="color: red;">Error de Transacción</h1>
+    <p>No se pudo realizar la transacción. Serás redirigido al inicio en unos segundos.</p>
+  </div>
 
-<h1>error</h1>
-
-    
+  <script>
+    // Redireccionar al home después de 2 segundos
+    setTimeout(function() {
+      window.location.href = "{% url 'pages/home.html' %}";  // Reemplaza 'home' con la URL de tu página principal
+    }, 1000);
+  </script>
 {% endblock %}
-
-
-

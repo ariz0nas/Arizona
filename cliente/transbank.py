@@ -76,10 +76,10 @@ def confirm_transaction(request):
                 return render(request, 'transbank/confirmation.html', {'transaction_data': transaction_data})
         else:
             # Manejar el error en caso de que la transacción no se pueda confirmar
-            return render(request, 'transbank/error.html')
+            return render(request, 'pages/home.html')
     else:
         # Manejar el caso en que no se haya proporcionado el parámetro 'token_ws'
-        return render(request, 'transbank/error.html')
+        return render(request, 'pages/home.html')
 
 
 

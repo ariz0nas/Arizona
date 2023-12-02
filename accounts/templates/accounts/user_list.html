@@ -32,8 +32,11 @@ List | {{ block.super }}
             <td>{{ user.email }}</td>
             <td>{{ user.roles }}</td>
             <td>
-              <a href="#" class="btn btn-outline-primary">Edit</a>
-              <a href="{% url 'account:user_delete' user.pk %}" class="btn btn-outline-danger">Delete</a>
+              <a href="{% url 'account:editar_usuario' user.id %}" class="btn btn-outline-primary">Edit</a>
+              <form method="post" action="{% url 'account:eliminar_usuario' user.id %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-outline-danger" value="Delete" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+              </form>
             </td>
           </tr>
           {% endfor %}

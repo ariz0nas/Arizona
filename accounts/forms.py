@@ -4,12 +4,10 @@ from django.contrib.auth.forms import UserCreationForm
 from accounts.models import User
 from django.core.exceptions import ValidationError
 
-
-
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'name', 'apellidos', 'email', 'roles']
+        fields = ['username', 'name', 'apellidos', 'email', 'is_staff', 'is_active', 'roles']
 
 
 class UserAdminCreationForm(UserCreationForm):

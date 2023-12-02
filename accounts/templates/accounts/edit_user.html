@@ -1,0 +1,120 @@
+{% extends 'accounts/index.html' %}
+{% load custom_filters %}
+
+{% block title %}
+  Editar Usuario | {{ block.super }}
+{% endblock %}
+
+{% block accounts_container %}
+  <style>
+    /* Estilos específicos para esta página */
+
+    .card {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      border-radius: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Añade más estilos generales aquí si es necesario */
+
+  </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var isStaffCheckbox = document.getElementById('{{ form.is_staff.id_for_label }}');
+    var rolesField = document.getElementById('{{ form.roles.id_for_label }}');
+
+    // Función para manejar el cambio en el checkbox is_staff
+    function handleIsStaffChange() {
+      rolesField.disabled = !isStaffCheckbox.checked;  // Deshabilitar el campo de roles si is_staff no está marcado
+
+      // Configurar automáticamente el rol de administrador si is_staff está marcado
+      if (isStaffCheckbox.checked) {
+        rolesField.value = '1';  // Ajusta el valor correspondiente para el rol de administrador
+      } else {
+        rolesField.value = '';  // Reiniciar el valor del campo de roles si is_staff no está marcado
+      }
+    }
+
+    // Agregar el evento de cambio al checkbox is_staff
+    isStaffCheckbox.addEventListener('change', handleIsStaffChange);
+
+    // Llamar a la función handleIsStaffChange al cargar la página para establecer el estado inicial
+    handleIsStaffChange();
+  });
+</script>
+
+
+<div class="container">
+  <div class="card">
+    <h2 class="text-center">Editar Usuario</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label" for="{{ form.username.id_for_label }}">Nombre de Usuario:</label>
+        {{ form.username }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.name.id_for_label }}">Nombre:</label>
+        {{ form.name }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
+        {{ form.apellidos }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.email.id_for_label }}">Email:</label>
+        {{ form.email }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.is_staff.id_for_label }}">¿Es administrador?</label>
+        {{ form.is_staff }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.is_active.id_for_label }}">¿Está activo?</label>
+        {{ form.is_active }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="{{ form.roles.id_for_label }}">Rol:</label>
+        {{ form.roles }}
+      </div>
+
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{% url 'account:user_list' %}" class="btn btn-secondary">Volver al listado de usuarios</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

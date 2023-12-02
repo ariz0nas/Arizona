@@ -32,17 +32,32 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import UserEditForm
 from .models import User
 
+# En tu aplicación/views.py
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .forms import UserEditForm
+from .models import User
+
 def edit_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+    user_to_edit = get_object_or_404(User, id=user_id)
+    
     if request.method == 'POST':
-        form = UserEditForm(request.POST, instance=user)
+        form = UserEditForm(request.POST, instance=user_to_edit)
         if form.is_valid():
             form.save()
             messages.success(request, 'Usuario actualizado exitosamente.')
-            return redirect('account:user_list')  
+            return redirect('account:user_list')
     else:
-        form = UserEditForm(instance=user)
-    return render(request, 'accounts/edit.html', {'form': form, 'user': user})
+        form = UserEditForm(instance=user_to_edit)
+
+    return render(request, 'accounts/edit_user.html', {'form': form, 'user_to_edit': user_to_edit})
+
+
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'accounts/user_list.html', {'users': users})
+
 
 
 

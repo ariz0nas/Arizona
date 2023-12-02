@@ -26,6 +26,6 @@ urlpatterns = [
     path('roles/', RolListView.as_view(), name='rol-list'),
     path('rol/<int:pk>/', RolDetailView.as_view(), name='rol-det'),
     path('eliminar_usuario/<int:user_id>/', EliminarUsuarioView.as_view(), name='eliminar_usuario'),
-    path('editar-usuario/<int:user_id>/', edit_user, name='editar_usuario'),
+    path('usuario/<int:user_id>/edit/', edit_user, name='edit_user'),
 
 ]
